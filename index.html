@@ -1,222 +1,92 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>BIMU WEARS</title>
-
+  <title>BIMU WEARS — Admin</title>
   <link rel="stylesheet" href="./styles.css">
 </head>
 
 <body>
 
 <header>
-  
-  <a href="#" style="text-decoration:none;color:#222;display:flex;align-items:center;">
-  <img src="./logo.png" alt="BIMU WEARS" style="width:120px;height:auto;">
+  <a href="./index.html" style="text-decoration:none;color:#222;font-size:20px;font-weight:bold;">
+    BIMU WEARS
   </a>
 
-  <nav>
-    <a href="#shop">Shop</a>
-    <a href="#about">About</a>
-    <button onclick="openCart()">Bag (<span id="count">0</span>)</button>
-  </nav>
+  <a href="./index.html" class="btn">View Website</a>
 </header>
 
-<section class="hero">
-  <div>
-    <p style="letter-spacing:3px;font-size:12px;">WELCOME TO BIMU WEARS</p>
+<section class="section">
 
-    <h1>Wear your<br>confidence.</h1>
+  <h2>Admin Panel</h2>
 
-    <p>
-      Timeless, comfortable and effortlessly beautiful pieces
-      made for your everyday style.
-    </p>
+  <div style="max-width:450px;margin:30px auto;">
 
-    <a class="btn" href="#shop">SHOP THE COLLECTION</a>
-  </div>
-</section>
+    <h3>Admin Login</h3>
 
-<section class="section" id="shop">
-  <h2>Featured Collection</h2>
+    <label>Email</label>
+    <input id="email" type="email"
+      placeholder="Admin email"
+      style="width:100%;padding:12px;margin:8px 0 15px;">
 
-  <p style="text-align:center;margin-bottom:30px;color:#777;">
-    Discover our latest styles.
-  </p>
+    <label>Password</label>
+    <input id="password" type="password"
+      placeholder="Password"
+      style="width:100%;padding:12px;margin:8px 0 15px;">
 
-  <div class="grid" id="products"></div>
-</section>
+    <button onclick="loginAdmin()">LOGIN</button>
 
-<section class="section" id="about">
-  <h2>Made for your everyday.</h2>
-
-  <p style="max-width:650px;margin:auto;text-align:center;line-height:1.8;color:#777;">
-    Bimu Wears brings together easy-to-style essentials with a
-    clean and elegant feel. Find your next favourite look.
-  </p>
-</section>
-
-<footer>
-  <h3>BIMU WEARS</h3>
-  <p>Style that feels like you.</p>
-  <p>© 2026 Bimu Wears. All rights reserved.</p>
-</footer>
-
-<div class="overlay" id="overlay" onclick="closeCart()"></div>
-
-<aside class="drawer" id="drawer">
-
-  <div class="drawerhead">
-    <h2>Your Bag</h2>
-    <button onclick="closeCart()">×</button>
   </div>
 
-  <div id="cartitems"></div>
+  <hr style="margin:40px 0;border:0;border-top:1px solid #eee;">
 
-  <div class="total">
-    <span>Total</span>
-    <span id="total">Rs 0</span>
+  <div style="max-width:600px;margin:auto;">
+
+    <h3>Add Product</h3>
+
+    <label>Product Name</label>
+    <input id="productName"
+      placeholder="Product name"
+      style="width:100%;padding:12px;margin:8px 0 15px;">
+
+    <label>Price</label>
+    <input id="productPrice"
+      type="number"
+      placeholder="Price in Rs"
+      style="width:100%;padding:12px;margin:8px 0 15px;">
+
+    <label>Product Image URL</label>
+    <input id="productImage"
+      placeholder="Image URL"
+      style="width:100%;padding:12px;margin:8px 0 15px;">
+
+    <label>Description</label>
+    <textarea id="productDescription"
+      rows="4"
+      placeholder="Product description"
+      style="width:100%;padding:12px;margin:8px 0 15px;"></textarea>
+
+    <button onclick="addProduct()">ADD PRODUCT</button>
+
   </div>
 
-  <h3>Checkout</h3>
+  <hr style="margin:40px 0;border:0;border-top:1px solid #eee;">
 
-  <form onsubmit="placeOrder(event)">
+  <div style="max-width:700px;margin:auto;">
 
-    <label>Full name</label>
-    <input id="name" required placeholder="Your name">
+    <h3>Orders</h3>
 
-    <label>Phone number</label>
-    <input id="phone" required placeholder="03xx xxxxxxx">
-
-    <label>Delivery address</label>
-    <textarea id="address" required rows="3"
-      placeholder="Complete address"></textarea>
-
-    <button class="btn" type="submit" style="width:100%;">
-      PLACE ORDER
-    </button>
-
-  </form>
-
-  <p id="success"></p>
-
-</aside>
-
-<script>
-let cart = JSON.parse(localStorage.getItem("bimuCart") || "[]");
-
-function updateCart() {
-  document.getElementById("count").innerText = cart.length;
-
-  const items = document.getElementById("cartitems");
-
-  if (!cart.length) {
-    items.innerHTML = "<p>Your bag is empty.</p>";
-    document.getElementById("total").innerText = "Rs 0";
-    return;
-  }
-
-  items.innerHTML = cart.map((item, index) => `
-    <div style="padding:12px 0;border-bottom:1px solid #eee;">
-      <b>${item.name}</b>
-      <p>Rs ${item.price}</p>
-      <button onclick="removeFromCart(${index})">
-        Remove
-      </button>
+    <div id="orders" style="margin-top:20px;">
+      Loading orders...
     </div>
-  `).join("");
 
-  const total = cart.reduce(
-    (sum, item) => sum + Number(item.price), 0
-  );
+  </div>
 
-  document.getElementById("total").innerText = "Rs " + total;
-}
+</section>
 
-function addToCart(product) {
-  cart.push(product);
-  localStorage.setItem("bimuCart", JSON.stringify(cart));
-  updateCart();
-  alert("Added to bag 🛍️");
-}
-
-function removeFromCart(index) {
-  cart.splice(index, 1);
-  localStorage.setItem("bimuCart", JSON.stringify(cart));
-  updateCart();
-}
-
-function openCart() {
-  document.getElementById("drawer").classList.add("open");
-  document.getElementById("overlay").classList.add("show");
-}
-
-function closeCart() {
-  document.getElementById("drawer").classList.remove("open");
-  document.getElementById("overlay").classList.remove("show");
-}
-
-async function placeOrder(event) {
-
-  event.preventDefault();
-
-  if (!cart.length) {
-    alert("Your bag is empty.");
-    return;
-  }
-
-  const customerName = document.getElementById("name").value;
-  const phone = document.getElementById("phone").value;
-  const address = document.getElementById("address").value;
-
-  const total = cart.reduce(
-    (sum, item) => sum + Number(item.price), 0
-  );
-
-  const { createClient } =
-    await import(
-      "https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm"
-    );
-
-  const { SUPABASE_URL, SUPABASE_ANON_KEY } =
-    await import("./supabase-config.js");
-
-  const supabase =
-    createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-
-  const { error } = await supabase
-    .from("orders")
-    .insert([{
-      customer_name: customerName,
-      phone: phone,
-      address: address,
-      items: cart,
-      total: total,
-      status: "new"
-    }]);
-
-  if (error) {
-    alert("Order could not be placed.");
-    console.error(error);
-    return;
-  }
-
-  cart = [];
-  localStorage.removeItem("bimuCart");
-
-  updateCart();
-
-  document.getElementById("success").innerText =
-    "Order placed successfully ❤️";
-
-  document.querySelector("form").reset();
-}
-
-updateCart();
-</script>
-
-<script type="module" src="./app.js"></script>
+<script type="module" src="./admin.js"></script>
 
 </body>
 </html>
