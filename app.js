@@ -3,8 +3,6 @@ import { SUPABASE_URL, SUPABASE_ANON_KEY } from "./supabase-config.js";
 
 const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-let cart = JSON.parse(localStorage.getItem("bimuCart") || "[]");
-
 async function loadProducts() {
   const { data, error } = await supabase
     .from("products")
@@ -24,43 +22,19 @@ async function loadProducts() {
       <img src="${product.image || "logo.png"}" alt="${product.name}">
       <h3>${product.name}</h3>
       <p>Rs. ${product.price}</p>
-      <button onclick='addToCart(${JSON.stringify(product)})'>Add to Bag</button>
+      <button onclick='addToCart(${JSON.stringify(product)})'>
+        Add to Bag
+      </button>
     </div>
   `).join("");
 }
+
+let cart = JSON.parse(localStorage.getItem("bimuCart") || "[]");
 
 window.addToCart = function(product) {
   cart.push(product);
   localStorage.setItem("bimuCart", JSON.stringify(cart));
   alert("Added to bag 🛍️");
-};
-
-window.placeOrder = async function(customerName, phone, address) {
-  if (!cart.length) {
-    alert("Your bag is empty.");
-    return;
-  }
-
-  const total = cart.reduce((sum, item) => sum + Number(item.price), 0);
-
-  const { error } = await supabase.from("orders").insert([{
-    customer_name: customerName,
-    phone: phone,
-    address: address,
-    items: cart,
-    total: total,
-    status: "new"
-  }]);
-
-  if (error) {
-    console.error(error);
-    alert("Order could not be placed.");
-    return;
-  }
-
-  cart = [];
-  localStorage.removeItem("bimuCart");
-  alert("Order placed successfully ❤️");
 };
 
 loadProducts();
