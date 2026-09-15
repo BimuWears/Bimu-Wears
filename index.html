@@ -48,3 +48,4 @@ function openCart(){drawer.classList.add("open");overlay.classList.add("open")}f
 function placeOrder(e){e.preventDefault();if(!cart.length){alert("Your bag is empty.");return}document.getElementById("success").textContent="Thank you! Your order request has been received. We will contact you to confirm.";cart=[];save();e.target.reset()}
 render();
 </script></body></html>
+<script type="module" src="./app.js"></script>
